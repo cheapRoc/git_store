@@ -1,8 +1,8 @@
 require 'rake'
-require "rake/rdoctask"
+require "rdoc/task"
 
 begin
-  require 'spec/rake/spectask'
+  require 'rspec/core/rake_task'
 rescue LoadError
   puts <<-EOS
 To use rspec for testing you must install the rspec gem:
@@ -12,15 +12,15 @@ EOS
 end
 
 desc "Run all specs"
-Spec::Rake::SpecTask.new(:spec) do |t|
-  t.spec_opts = ['-cfs']
-  t.spec_files = FileList['test/**/*_spec.rb']
+RSpec::Core::RakeTask.new(:spec) do |t|
+  t.rspec_opts = ['-cfs']
+  t.pattern = 'test/**/*_spec.rb'
 end
 
 desc "Print SpecDocs"
-Spec::Rake::SpecTask.new(:doc) do |t|
-  t.spec_opts = ["--format", "specdoc"]
-  t.spec_files = FileList['test/*_spec.rb']
+RSpec::Core::RakeTask.new(:doc) do |t|
+  t.rspec_opts = ["--format", "specdoc"]
+  t.pattern = 'test/*_spec.rb'
 end
 
 desc "Generate the RDoc"
