@@ -102,6 +102,19 @@ describe GitStore do
     store['x/a'].should == 'b'
   end
 
+  it 'should use custom author for transaction' do
+    author = GitStore::User.new name = "Cracker Barrel", email = "cracker@barrel.net", Time.now
+
+    store.transaction "", author do
+      store['x/a'] = 'b'
+    end
+
+    store.load
+
+    store.commits.first.author.name.should == name
+    store.commits.first.author.email.should == email
+  end
+
   it 'should resolve paths' do
     file 'x/a', 'Hello'
     file 'y/b', 'World'
@@ -251,7 +264,7 @@ describe GitStore do
     tag.object.should == store.head
     tag.tagger.name.should == user.name
     tag.tagger.email.should == user.email
-    tag.message.should =~ /message/    
+    tag.message.should =~ /message/
   end
   
 end
