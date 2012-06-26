@@ -1,5 +1,7 @@
 class GitStore
   class User < Struct.new(:name, :email, :time)
+    class GitConfigError < StandardError; end
+
     def dump
       "#{ name } <#{email}> #{ time.to_i } #{ time.strftime('%z') }"
     end
@@ -19,9 +21,9 @@ class GitStore
 
       if $?.exitstatus == 0
         return value unless value.empty?
-        raise RuntimeError, "#{key} is empty"
+        raise GitConfigError, "#{key} is empty"
       else
-        raise RuntimeError, "No #{key} found in git config"
+        raise GitConfigError, "No #{key} found in git config"
       end
     end
 
